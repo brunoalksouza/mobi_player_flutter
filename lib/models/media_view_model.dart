@@ -1,20 +1,24 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import '../env.dart';
 import '../models/media_model.dart';
 
-class MediaViewModel extends ChangeNotifier {
+class MediaViewModel {
   List<MediaModel> _midias = [];
   int _indiceAtual = 0;
   Timer? _timer;
+  void Function()? _onUpdate;
 
   List<MediaModel> get midias => _midias;
   int get indiceAtual => _indiceAtual;
+  bool get hasMidias => _midias.isNotEmpty;
 
   MediaViewModel() {
     _carregarMidias();
-    _iniciarCicloMidias();
+  }
+
+  void setUpdateCallback(void Function() onUpdate) {
+    _onUpdate = onUpdate;
   }
 
   void _carregarMidias() {
@@ -26,11 +30,14 @@ class MediaViewModel extends ChangeNotifier {
             (item.path.endsWith('.png') || item.path.endsWith('.mp4')))
         .map((item) => MediaModel(file: File(item.path)))
         .toList();
-    notifyListeners();
   }
 
-  void _iniciarCicloMidias() {
-    _configurarMidiaAtual();
+  void iniciarCicloMidias() {
+    if (_midias.isNotEmpty) {
+      _configurarMidiaAtual();
+    } else {
+      _onUpdate?.call();
+    }
   }
 
   void _configurarMidiaAtual() {
@@ -41,22 +48,19 @@ class MediaViewModel extends ChangeNotifier {
     } else {
       _timer = Timer(const Duration(seconds: 15), _proximaMidia);
     }
-    notifyListeners();
+    _onUpdate?.call();
   }
 
   void _proximaMidia() {
     _indiceAtual = (_indiceAtual + 1) % _midias.length;
     _configurarMidiaAtual();
-    notifyListeners();
   }
 
   void onVideoEnd() {
     _proximaMidia();
   }
 
-  @override
   void dispose() {
     _timer?.cancel();
-    super.dispose();
   }
 }
