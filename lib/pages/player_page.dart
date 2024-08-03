@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:video_player_win/video_player_win.dart';
+import 'package:midia_player/widgets/image_widget.dart';
+import 'package:midia_player/widgets/video_widget.dart';
 import '../env.dart';
 
 class PlayerPage extends StatefulWidget {
@@ -15,7 +16,6 @@ class _PlayerPageState extends State<PlayerPage> {
   late List<File> _midias;
   late int _indiceAtual;
   Timer? _timer;
-  WinVideoPlayerController? _videoController;
 
   @override
   void initState() {
@@ -30,7 +30,6 @@ class _PlayerPageState extends State<PlayerPage> {
   @override
   void dispose() {
     _timer?.cancel();
-    _videoController?.dispose();
     super.dispose();
   }
 
@@ -54,21 +53,12 @@ class _PlayerPageState extends State<PlayerPage> {
     _configurarMidiaAtual();
   }
 
-  void _configurarMidiaAtual() async {
+  void _configurarMidiaAtual() {
     final midiaAtual = _midias[_indiceAtual];
 
     if (midiaAtual.path.endsWith('.mp4')) {
-      _videoController?.dispose();
-      _videoController = WinVideoPlayerController.file(midiaAtual)
-        ..initialize().then((_) {
-          setState(() {});
-          _videoController?.play();
-          _videoController?.setLooping(false);
-
-          _timer = Timer(_videoController!.value.duration, _proximaMidia);
-        }).catchError((error) {
-          print('Erro ao inicializar o vídeo: $error');
-        });
+      _timer?.cancel();
+      setState(() {});
     } else {
       setState(() {});
       _timer = Timer(const Duration(seconds: 15), _proximaMidia);
@@ -98,21 +88,12 @@ class _PlayerPageState extends State<PlayerPage> {
     return Scaffold(
       body: Center(
         child: midiaAtual.path.endsWith('.mp4')
-            ? _videoController != null && _videoController!.value.isInitialized
-                ? FittedBox(
-                    fit: BoxFit.cover,
-                    child: SizedBox(
-                      width: _videoController!.value.size.width,
-                      height: _videoController!.value.size.height,
-                      child: WinVideoPlayer(_videoController!),
-                    ),
-                  )
-                : const CircularProgressIndicator()
-            : Image.file(
-                midiaAtual,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
+            ? VideoWidget(
+                videoPath: midiaAtual.path,
+                onVideoEnd: _proximaMidia,
+              )
+            : ImageWidget(
+                imagePath: midiaAtual.path,
               ),
       ),
     );
