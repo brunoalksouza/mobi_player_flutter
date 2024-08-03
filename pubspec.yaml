@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  video_player_win: ^2.3.9
  
 dev_dependencies:
   flutter_test:

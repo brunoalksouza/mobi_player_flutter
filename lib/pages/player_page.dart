@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:video_player_win/video_player_win.dart';
 import '../env.dart';
 
 class PlayerPage extends StatefulWidget {
@@ -11,54 +12,92 @@ class PlayerPage extends StatefulWidget {
 }
 
 class _PlayerPageState extends State<PlayerPage> {
-  late List<String> _imagens;
+  late List<File> _midias;
   late int _indiceAtual;
-  late Timer _timer;
+  Timer? _timer;
+  WinVideoPlayerController? _videoController;
 
   @override
   void initState() {
     super.initState();
-    _imagens = _carregarImagens();
+    _midias = _carregarMidias();
     _indiceAtual = 0;
-    _iniciarCicloImagens();
+    _iniciarCicloMidias();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
+    _videoController?.dispose();
     super.dispose();
   }
 
-  List<String> _carregarImagens() {
+  List<File> _carregarMidias() {
     final dir = Directory(caminhoPasta);
     return dir
         .listSync()
-        .where((item) => item is File && item.path.endsWith('.png'))
-        .map((item) => item.path)
+        .where((item) =>
+            item is File &&
+            (item.path.endsWith('.png') || item.path.endsWith('.mp4')))
+        .map((item) => File(item.path))
         .toList();
   }
 
-  void _iniciarCicloImagens() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _indiceAtual = (_indiceAtual + 1) % _imagens.length;
-      });
+  void _iniciarCicloMidias() {
+    _configurarMidiaAtual();
+  }
+
+  void _configurarMidiaAtual() async {
+    final midiaAtual = _midias[_indiceAtual];
+
+    if (midiaAtual.path.endsWith('.mp4')) {
+      _videoController?.dispose();
+      _videoController = WinVideoPlayerController.file(midiaAtual)
+        ..initialize().then((_) {
+          setState(() {});
+          _videoController?.play();
+          _videoController?.setLooping(false);
+
+          _timer = Timer(_videoController!.value.duration, _proximaMidia);
+        }).catchError((error) {
+          print('Erro ao inicializar o vídeo: $error');
+        });
+    } else {
+      setState(() {});
+      _timer = Timer(const Duration(seconds: 1), _proximaMidia);
+    }
+  }
+
+  void _proximaMidia() {
+    setState(() {
+      _indiceAtual = (_indiceAtual + 1) % _midias.length;
     });
+    _configurarMidiaAtual();
   }
 
   @override
   Widget build(BuildContext context) {
+    final midiaAtual = _midias[_indiceAtual];
+
     return Scaffold(
       body: Center(
-        child: _imagens.isNotEmpty
-            ? Image.file(
-                File(_imagens[_indiceAtual]),
+        child: midiaAtual.path.endsWith('.mp4')
+            ? _videoController != null && _videoController!.value.isInitialized
+                ? FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: _videoController!.value.size.width,
+                      height: _videoController!.value.size.height,
+                      child: WinVideoPlayer(_videoController!),
+                    ),
+                  )
+                : const CircularProgressIndicator()
+            : Image.file(
+                midiaAtual,
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: double.infinity,
-              )
-            : const Text('Nenhuma imagem encontrada',
-                style: TextStyle(color: Colors.white)),
+              ),
       ),
     );
   }
