@@ -67,7 +67,7 @@ class _PlayerPageState extends State<PlayerPage> {
         });
     } else {
       setState(() {});
-      _timer = Timer(const Duration(seconds: 1), _proximaMidia);
+      _timer = Timer(const Duration(seconds: 15), _proximaMidia);
     }
   }
 
