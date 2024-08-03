@@ -11,14 +11,13 @@ class MediaViewModel {
 
   List<MediaModel> get midias => _midias;
   int get indiceAtual => _indiceAtual;
-  bool get hasMidias => _midias.isNotEmpty;
+bool get hasMidia => _midias.isNotEmpty;
 
   MediaViewModel() {
     _carregarMidias();
-  }
-
-  void setUpdateCallback(void Function() onUpdate) {
-    _onUpdate = onUpdate;
+    if (hasMidia) {
+      _iniciarCicloMidias();
+    }
   }
 
   void _carregarMidias() {

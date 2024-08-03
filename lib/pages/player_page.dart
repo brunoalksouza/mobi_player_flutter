@@ -16,12 +16,11 @@ class _PlayerPageState extends State<PlayerPage> {
   @override
   void initState() {
     super.initState();
-    _viewModel = MediaViewModel();
-    _viewModel!.setUpdateCallback(() {
-      setState(() {});
-    });
-    if (_viewModel!.hasMidias) {
-      _viewModel!.iniciarCicloMidias();
+_midias = _carregarMidias();
+    _indiceAtual = 0;
+    //add an if statemant to check if the midias list is not empty
+    if (_midias.isNotEmpty) {
+      _iniciarCicloMidias();
     }
   }
 
@@ -33,24 +32,17 @@ class _PlayerPageState extends State<PlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_viewModel == null || !_viewModel!.hasMidias) {
+    if (!_midias.isNotEmpty) {
       return const Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Nenhuma mídia encontrada',
-                style: TextStyle(color: Colors.black),
-              ),
-              Text('Caminho da pasta: "C:/mobi_player"'),
-            ],
-          ),
+          child: Text('Nenhuma mídia encontrada',
+              style: TextStyle(color: Colors.black)),
         ),
       );
     }
 
-    final midiaAtual = _viewModel!.midias[_viewModel!.indiceAtual];
+    final midiaAtual = _midias[_indiceAtual];
+
 
     return Scaffold(
       body: Center(
