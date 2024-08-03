@@ -22,7 +22,6 @@ class _PlayerPageState extends State<PlayerPage> {
     super.initState();
     _midias = _carregarMidias();
     _indiceAtual = 0;
-    //add an if statemant to check if the midias list is not empty
     if (_midias.isNotEmpty) {
       _iniciarCicloMidias();
     }
@@ -39,9 +38,14 @@ class _PlayerPageState extends State<PlayerPage> {
     final dir = Directory(caminhoPasta);
     return dir
         .listSync()
-        .where((item) =>
-            item is File &&
-            (item.path.endsWith('.png') || item.path.endsWith('.mp4')))
+        .where(
+          (item) =>
+              item is File &&
+              (item.path.endsWith('.png') ||
+                  item.path.endsWith('.jpg') ||
+                  item.path.endsWith('.jpeg') ||
+                  item.path.endsWith('.mp4')),
+        )
         .map((item) => File(item.path))
         .toList();
   }
@@ -80,6 +84,8 @@ class _PlayerPageState extends State<PlayerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final midiaAtual = _midias[_indiceAtual];
+
     if (!_midias.isNotEmpty) {
       return const Scaffold(
         body: Center(
@@ -88,8 +94,6 @@ class _PlayerPageState extends State<PlayerPage> {
         ),
       );
     }
-
-    final midiaAtual = _midias[_indiceAtual];
 
     return Scaffold(
       body: Center(
