@@ -22,7 +22,10 @@ class _PlayerPageState extends State<PlayerPage> {
     super.initState();
     _midias = _carregarMidias();
     _indiceAtual = 0;
-    _iniciarCicloMidias();
+    //add an if statemant to check if the midias list is not empty
+    if (_midias.isNotEmpty) {
+      _iniciarCicloMidias();
+    }
   }
 
   @override
@@ -77,6 +80,15 @@ class _PlayerPageState extends State<PlayerPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_midias.isNotEmpty) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Nenhuma mídia encontrada',
+              style: TextStyle(color: Colors.black)),
+        ),
+      );
+    }
+
     final midiaAtual = _midias[_indiceAtual];
 
     return Scaffold(

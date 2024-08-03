@@ -11,10 +11,13 @@ class MediaViewModel extends ChangeNotifier {
 
   List<MediaModel> get midias => _midias;
   int get indiceAtual => _indiceAtual;
+  bool get hasMidia => _midias.isNotEmpty;
 
   MediaViewModel() {
     _carregarMidias();
-    _iniciarCicloMidias();
+    if (hasMidia) {
+      _iniciarCicloMidias();
+    }
   }
 
   void _carregarMidias() {
