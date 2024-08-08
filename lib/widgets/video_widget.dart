@@ -6,8 +6,8 @@ class VideoWidget extends StatelessWidget {
 
   const VideoWidget({
     required this.videoController,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
