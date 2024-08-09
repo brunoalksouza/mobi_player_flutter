@@ -32,14 +32,24 @@ class _PlayerPageState extends State<PlayerPage> {
       body: ValueListenableBuilder<int>(
         valueListenable: _controller.midiaNotifier,
         builder: (context, value, child) {
-          final midiaAtual = _controller.midias[_controller.indiceAtual];
-
           if (_controller.midias.isEmpty) {
             return const Center(
-              child: Text('Nenhuma mídia encontrada',
-                  style: TextStyle(color: Colors.black)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Nenhuma mídia encontrada',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  Text(
+                    'Adicione sua mídia em "C:/mobi_player"',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
+              ),
             );
           }
+          final midiaAtual = _controller.midias[_controller.indiceAtual];
 
           return Center(
             child: midiaAtual.path.endsWith('.mp4')

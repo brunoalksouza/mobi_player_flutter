@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:midia_player/services/splash_service.dart';
-// import 'package:midia_player/service/splash_service.dart'; // Comentado para remover SplashScreen
-
+ 
 void main() {
   runApp(const MyApp());
 }
