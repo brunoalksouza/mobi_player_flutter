@@ -24,6 +24,10 @@ class PlayerController extends ChangeNotifier {
 
   void _carregarMidias() {
     final dir = Directory(caminhoPasta);
+    if (!dir.existsSync()) {
+      return;
+    }
+
     _midias = dir
         .listSync()
         .where(
@@ -40,6 +44,8 @@ class PlayerController extends ChangeNotifier {
   }
 
   void _configurarMidiaAtual() {
+    if (_midias.isEmpty) return;
+
     final midiaAtual = _midias[_indiceAtual];
 
     if (midiaAtual.path.endsWith('.mp4')) {
@@ -66,6 +72,7 @@ class PlayerController extends ChangeNotifier {
   }
 
   void _proximaMidia() {
+    if (_midias.isEmpty) return;
     _indiceAtual = (_indiceAtual + 1) % _midias.length;
     _configurarMidiaAtual();
     notifyListeners();
