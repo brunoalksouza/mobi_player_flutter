@@ -43,21 +43,27 @@ class PlayerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _configurarMidiaAtual() {
+  Future<void> _configurarMidiaAtual() async {
     if (_midias.isEmpty) return;
 
     final midiaAtual = _midias[_indiceAtual];
 
     if (midiaAtual.path.endsWith('.mp4')) {
-      _videoController = WinVideoPlayerController.file(midiaAtual)
-        ..initialize().then((_) {
-          _videoController?.play();
-          _videoController?.setLooping(false);
-          _videoController?.addListener(_onVideoEnd);
-          changewidget(Duration(
-              milliseconds:
-                  _videoController?.value.duration.inMilliseconds ?? 0));
-        });
+      _videoController = WinVideoPlayerController.file(midiaAtual);
+      // ..initialize().then((_) {
+      //   _videoController?.play();
+      //   _videoController?.setLooping(false);
+      //   _videoController?.addListener(_onVideoEnd);
+      //   changewidget(Duration(
+      //       milliseconds:
+      //           _videoController?.value.duration.inMilliseconds ?? 0));
+      // });
+
+      await _videoController!.initialize();
+      await _videoController!.setLooping(false);
+      await _videoController!.play();
+      changewidget(Duration(
+          milliseconds: _videoController?.value.duration.inMilliseconds ?? 0));
     } else {
       changewidget(const Duration(seconds: 5));
     }
@@ -71,10 +77,10 @@ class PlayerController extends ChangeNotifier {
     }
   }
 
-  void _proximaMidia() {
+  Future<void> _proximaMidia() async {
     if (_midias.isEmpty) return;
     _indiceAtual = (_indiceAtual + 1) % _midias.length;
-    _configurarMidiaAtual();
+    await _configurarMidiaAtual();
     notifyListeners();
   }
 
