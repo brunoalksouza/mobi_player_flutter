@@ -55,6 +55,7 @@ class _PlayerPageState extends State<PlayerPage> {
             child: midiaAtual.path.endsWith('.mp4')
                 ? VideoWidget(
                     videoController: _controller.videoController!,
+                    playerController: _controller,
                   )
                 : ImageWidget(
                     imagePath: midiaAtual.path,
