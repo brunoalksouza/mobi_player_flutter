@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:midia_player/controllers/player_controller.dart';
 import 'package:midia_player/widgets/image_widget.dart';
@@ -26,10 +27,7 @@ class _PlayerPageState extends State<PlayerPage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ValueListenableBuilder<int>(
+  Widget _body() => ValueListenableBuilder<int>(
         valueListenable: _controller.midiaNotifier,
         builder: (context, value, child) {
           if (_controller.midias.isEmpty) {
@@ -62,6 +60,24 @@ class _PlayerPageState extends State<PlayerPage> {
                   ),
           );
         },
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          _body(),
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () {
+                Process.run(
+                    'C:/Program Files/Google/Chrome/Application/chrome.exe',
+                    []);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
