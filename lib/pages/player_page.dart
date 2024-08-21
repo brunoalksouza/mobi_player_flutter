@@ -8,23 +8,46 @@ class PlayerPage extends StatefulWidget {
   const PlayerPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _PlayerPageState createState() => _PlayerPageState();
 }
 
 class _PlayerPageState extends State<PlayerPage> {
   late PlayerController _controller;
+  String? executavelPath;
 
   @override
   void initState() {
     super.initState();
     _controller = PlayerController();
+    _loadExecutavelPath();
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadExecutavelPath() async {
+    try {
+      final file = File('C:/mobi_player/caminho_executavel.txt');
+      executavelPath = await file.readAsString();
+      executavelPath = executavelPath?.trim();
+    } catch (e) {
+      print('Erro ao ler o arquivo: $e');
+    }
+  }
+
+  void _abrirExecutavel() {
+    if (executavelPath != null && executavelPath!.isNotEmpty) {
+      try {
+        Process.run(executavelPath!, []);
+      } catch (e) {
+        print('Erro ao abrir o executável: $e');
+      }
+    } else {
+      print('Caminho do executável não encontrado.');
+    }
   }
 
   Widget _body() => ValueListenableBuilder<int>(
@@ -70,11 +93,7 @@ class _PlayerPageState extends State<PlayerPage> {
           _body(),
           Positioned.fill(
             child: GestureDetector(
-              onTap: () {
-                Process.run(
-                    'C:/Program Files/Google/Chrome/Application/chrome.exe',
-                    []);
-              },
+              onTap: _abrirExecutavel,
             ),
           ),
         ],
