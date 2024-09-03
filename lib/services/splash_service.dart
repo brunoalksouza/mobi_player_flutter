@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 4), () {
         widget.navigationService.navigateToMain(context);
       });
     });
@@ -36,9 +36,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: LinearProgressIndicator(),
+        child: Image.asset(
+          'lib/assets/splash_screen.gif',
+        ),
       ),
     );
   }
