@@ -22,7 +22,6 @@ class VideoWidget extends StatelessWidget {
               child: WinVideoPlayer(videoController),
             );
           }
-
           return Container();
         });
   }

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:midia_player/controllers/player_controller.dart';
-import 'package:midia_player/env.dart';
 import 'package:midia_player/functions/show_error_dialog.dart';
 import 'package:midia_player/widgets/image_widget.dart';
 import 'package:midia_player/widgets/video_widget.dart';
@@ -94,7 +93,6 @@ class _PlayerPageState extends State<PlayerPage> {
           );
         }
         final midiaAtual = _controller.midias[_controller.indiceAtual];
-
         return Center(
           child: midiaAtual.path.endsWith('.mp4')
               ? VideoWidget(
