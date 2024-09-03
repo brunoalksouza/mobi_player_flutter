@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   video_player_win: ^2.3.9
   window_manager: ^0.4.2
- 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -19,3 +19,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - lib/assets/splash_screen.gif
