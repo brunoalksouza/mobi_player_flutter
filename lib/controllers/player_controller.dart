@@ -65,7 +65,7 @@ class PlayerController extends ChangeNotifier {
       changewidget(Duration(
           milliseconds: _videoController?.value.duration.inMilliseconds ?? 0));
     } else {
-      changewidget(const Duration(seconds: 5));
+      changewidget(const Duration(seconds: 15));
     }
     midiaNotifier.value = _indiceAtual;
   }
