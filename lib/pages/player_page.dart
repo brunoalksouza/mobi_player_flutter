@@ -94,7 +94,8 @@ class _PlayerPageState extends State<PlayerPage> {
         }
         final midiaAtual = _controller.midias[_controller.indiceAtual];
         return Center(
-          child: midiaAtual.path.endsWith('.mp4')
+          child: midiaAtual.path.endsWith('.mp4') ||
+                  midiaAtual.path.endsWith('.mkv')
               ? VideoWidget(
                   videoController: _controller.videoController!,
                   playerController: _controller,

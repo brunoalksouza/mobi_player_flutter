@@ -37,6 +37,7 @@ class PlayerController extends ChangeNotifier {
                   item.path.endsWith('.jpg') ||
                   item.path.endsWith('.jpeg') ||
                   item.path.endsWith('.mp4') ||
+                  item.path.endsWith('.mkv') ||
                   item.path.endsWith('.gif')),
         )
         .map((item) => File(item.path))
@@ -49,7 +50,7 @@ class PlayerController extends ChangeNotifier {
 
     final midiaAtual = _midias[_indiceAtual];
 
-    if (midiaAtual.path.endsWith('.mp4')) {
+    if (midiaAtual.path.endsWith('.mp4') || midiaAtual.path.endsWith('.mkv')) {
       _videoController = WinVideoPlayerController.file(midiaAtual);
       await _videoController!.initialize();
       await _videoController!.setLooping(false);
