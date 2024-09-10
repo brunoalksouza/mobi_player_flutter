@@ -36,7 +36,8 @@ class PlayerController extends ChangeNotifier {
               (item.path.endsWith('.png') ||
                   item.path.endsWith('.jpg') ||
                   item.path.endsWith('.jpeg') ||
-                  item.path.endsWith('.mp4')),
+                  item.path.endsWith('.mp4') ||
+                  item.path.endsWith('.gif')),
         )
         .map((item) => File(item.path))
         .toList();
@@ -50,15 +51,6 @@ class PlayerController extends ChangeNotifier {
 
     if (midiaAtual.path.endsWith('.mp4')) {
       _videoController = WinVideoPlayerController.file(midiaAtual);
-      // ..initialize().then((_) {
-      //   _videoController?.play();
-      //   _videoController?.setLooping(false);
-      //   _videoController?.addListener(_onVideoEnd);
-      //   changewidget(Duration(
-      //       milliseconds:
-      //           _videoController?.value.duration.inMilliseconds ?? 0));
-      // });
-
       await _videoController!.initialize();
       await _videoController!.setLooping(false);
       await _videoController!.play();
