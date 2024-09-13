@@ -1,7 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:midia_player/controllers/player_controller.dart';
-import 'package:midia_player/functions/show_error_dialog.dart';
+import 'package:midia_player/services/abrir_executavel.dart';
 import 'package:midia_player/widgets/image_widget.dart';
 import 'package:midia_player/widgets/video_widget.dart';
 
@@ -23,52 +22,14 @@ class _PlayerPageState extends State<PlayerPage> {
     _loadExecutavelPath();
   }
 
+  Future<void> _loadExecutavelPath() async {
+    executavelPath = await CarregarExecutavelPath();
+  }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadExecutavelPath() async {
-    try {
-      final file = File('C:/mobi_player/caminho_executavel.txt');
-      executavelPath = await file.readAsString();
-      executavelPath = executavelPath?.trim();
-    } catch (e) {
-      print('Erro ao ler o arquivo: $e');
-    }
-  }
-
-  void _abrirExecutavel() {
-    if (executavelPath != null && executavelPath!.isNotEmpty) {
-      try {
-        Process.run(executavelPath!, []).then((result) {
-          if (result.exitCode != 0) {
-            ShowErrorDialog(
-              context,
-              'Erro: ${result.exitCode}\n'
-              'Saída do erro: ${result.stderr}',
-            );
-          }
-        }).catchError((e) {
-          ShowErrorDialog(
-            context,
-            'Erro ao abrir o caminho do executável, verifique se o caminho está correto:\n "$executavelPath"',
-          );
-        });
-      } catch (e) {
-        ShowErrorDialog(
-          context,
-          'Erro ao abrir executável: $e',
-        );
-      }
-    } else {
-      ShowErrorDialog(
-        context,
-        'Caminho do executável não encontrado. \n'
-        'Verifique seu arquivo de texto em "C:/mobi_player/caminho_executavel.txt", ele está vazio ou não existe.',
-      );
-    }
   }
 
   Widget _body() {
@@ -110,7 +71,6 @@ class _PlayerPageState extends State<PlayerPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +79,7 @@ class _PlayerPageState extends State<PlayerPage> {
           _body(),
           Positioned.fill(
             child: GestureDetector(
-              onTap: _abrirExecutavel,
+              onTap: () => AbrirExecutavel(context, executavelPath),
             ),
           ),
         ],
