@@ -17,7 +17,7 @@ Future<String?> CarregarExecutavelPath() async {
 void AbrirExecutavel(context, String? executavelPath) {
   if (executavelPath != null && executavelPath.isNotEmpty) {
     try {
-      Process.run(executavelPath, []).then((result) {
+      Process.run(executavelPath, ['--kiosk']).then((result) {
         if (result.exitCode != 0) {
           ShowErrorDialog(
             context,
