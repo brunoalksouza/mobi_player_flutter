@@ -13,28 +13,21 @@ Future<String?> CarregarExecutavelPath() async {
   }
 }
 
-// ignore: non_constant_identifier_names
-void AbrirExecutavel(context, String? executavelPath) {
+Future<void> AbrirExecutavel(context, String? executavelPath) async {
   if (executavelPath != null && executavelPath.isNotEmpty) {
     try {
-      Process.run(executavelPath, ['--kiosk']).then((result) {
-        if (result.exitCode != 0) {
-          ShowErrorDialog(
-            context,
-            'Erro: ${result.exitCode}\n'
-            'Saída do erro: ${result.stderr}',
-          );
-        }
-      }).catchError((e) {
+      final result = await Process.run(executavelPath, ['--kiosk']);
+      if (result.exitCode != 0) {
         ShowErrorDialog(
           context,
-          'Erro ao abrir o caminho do executável, verifique se o caminho está correto:\n "$executavelPath"',
+          'Erro: ${result.exitCode}\n'
+          'Saída do erro: ${result.stderr}',
         );
-      });
+      }
     } catch (e) {
       ShowErrorDialog(
         context,
-        'Erro ao abrir executável: $e',
+        'Erro ao abrir o caminho do executável, verifique se o caminho está correto:\n "$executavelPath"',
       );
     }
   } else {
